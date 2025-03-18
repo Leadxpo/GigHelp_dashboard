@@ -63,5 +63,42 @@ const App = () => {
     </Router>
   );
 };
+import logo from './logo.svg';
+import './App.css';
+
+  return (
+    <Router>
+      {!isAuthenticated ? (
+        <Login setIsAuthenticated={setIsAuthenticated} />
+      ) : (
+        <Routes>
+          <Route
+            element={
+              <Layout
+                onLogout={handleLogout}
+                toggleSidebar={toggleSidebar}
+                isSidebarCollapsed={isSidebarCollapsed}
+                setIsAuthenticated={setIsAuthenticated}
+              />
+            }
+          >
+            {/* Main Pages */}
+            <Route path="/home" element={<Home />} />
+            <Route path="/task" element={<Task />} />
+            <Route path="/disputes" element={<Disputes />} />
+            <Route path="/user" element={<User />} />
+            <Route path="/requsts" element={<Requsts />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/transections" element={<Transections />} />
+            <Route path="/promotions" element={<Promotions />} />
+            <Route path="/termsconditions" element={<TermsAndConditions />} />
+            {/* Redirects */}
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="*" element={<Navigate to="/home" />} />
+          </Route>
+        </Routes>
+      )}
+    </Router>
+  );
 
 export default App;
