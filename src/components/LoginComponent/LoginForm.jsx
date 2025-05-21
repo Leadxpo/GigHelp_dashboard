@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
-import { Box, Typography, TextField, Button, FormHelperText, Link, IconButton, InputAdornment } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  FormHelperText,
+  Link,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const LoginForm = ({ handleLogin, alertMessage }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -32,7 +41,7 @@ const LoginForm = ({ handleLogin, alertMessage }) => {
       <Box
         component="form"
         onSubmit={(e) => handleLogin(e, email, password)}
-        sx={{ mt: 5, width: '100%' }}
+        sx={{ mt: 5, width: "100%" }}
       >
         <TextField
           margin="normal"
@@ -47,14 +56,17 @@ const LoginForm = ({ handleLogin, alertMessage }) => {
           margin="normal"
           fullWidth
           label="Password"
-          type={showPassword ? 'text' : 'password'}
+          type={showPassword ? "text" : "password"}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           variant="outlined"
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
@@ -62,18 +74,34 @@ const LoginForm = ({ handleLogin, alertMessage }) => {
           }}
         />
 
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+        >
           Sign In
         </Button>
 
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 1 }}>
-          <Link href="#" variant="body2" sx={{ fontSize: '0.875rem' }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: 1,
+          }}
+        >
+          <Link href="#" variant="body2" sx={{ fontSize: "0.875rem" }}>
             Forgot password?
           </Link>
         </Box>
       </Box>
 
-      <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 5 }}>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        align="center"
+        sx={{ mt: 5 }}
+      >
         {"Copyright © Your Website 2025."}
       </Typography>
     </Box>

@@ -1,14 +1,14 @@
 import React from 'react'
 import PageHeader from "../layout/PageHeader";
-import ProductList from "../components/Products/ProductList";
+import TaskList from "../components/Tasks/TaskList";
 
-function Products() {
+function Tasks() {
   return (
     <div>
           <PageHeader title="Tasks" />
-          <ProductList/>
+          <TaskList/>
     </div>
   )
 }
 
-export default Products
+export default Tasks

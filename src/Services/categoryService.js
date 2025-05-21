@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001/web/category';
+const API_URL = 'http://localhost:3001/dashboard/categories';
 const token = localStorage.getItem("accessToken");
-
+console.log("tokennnnn>",token)
 const headers = {
   'Accept': 'application/json',
   'Content-Type': 'application/json',
@@ -12,24 +12,23 @@ const headers = {
 // Fetch all categories
 export const fetchCategories = async () => {
   try {
-    const response = await axios.get(`${API_URL}/get-all-category`, { headers });
+    const response = await axios.get(`${API_URL}/get-all`, { headers });
+    console.log("categories....>", response.data)
     return response.data.data || [];
   } catch (error) {
     console.error("Error fetching categories:", error);
     return [];
   }
 };
-
 // Add a category
 export const addCategory = async (categoryData) => {
   try {
     const formData = new FormData();
-    formData.append('category_name', categoryData.category_name);
+    formData.append('categoryName', categoryData.categoryName);
     formData.append('description', categoryData.description);
-    formData.append('parent_id', categoryData.parent_id);
-    formData.append('image', categoryData.image); // Assuming image upload
+    formData.append('categoryImage', categoryData.categoryImage); // Assuming image upload
 
-    const response = await axios.post(`${API_URL}/create-category`, formData, { 
+    const response = await axios.post(`${API_URL}/create`, formData, { 
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -41,11 +40,13 @@ export const addCategory = async (categoryData) => {
   }
 };
 
-// Edit a category
-export const editCategory = async (category_id, updatedData) => {
+export const editCategory = async (categoryId, updatedData) => {
   try {
-    const response = await axios.put(`${API_URL}/update-category`, { category_id, ...updatedData }, { headers });
-    console.log("Update response:", response.data);
+    const response = await axios.put(
+      `${API_URL}/update/${categoryId}`, // 👈 Pass categoryId in the URL
+      updatedData,
+      { headers }
+    );
     return response.data;
   } catch (error) {
     console.error("Error updating category:", error.response?.data || error.message);
@@ -53,12 +54,12 @@ export const editCategory = async (category_id, updatedData) => {
   }
 };
 
+
 // Delete a category
-export const deleteCategory = async (category_id) => {
+export const deleteCategory = async (categoryId) => {
   try {
-    const response = await axios.delete(`${API_URL}/delete-category-by-id`, {
+    const response = await axios.delete(`${API_URL}/delete/${categoryId}`, {
       headers,
-      data: { category_id }
     });
     return response.data;
   } catch (error) {
@@ -66,6 +67,7 @@ export const deleteCategory = async (category_id) => {
     throw error;
   }
 };
+
 
 // Upload CSV
 export const uploadCategoryCSV = async (csvFile) => {

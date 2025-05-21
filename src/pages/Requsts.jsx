@@ -1,9 +1,14 @@
 import React from 'react'
+import PageHeader from "../layout/PageHeader";
+import Request from "../components/Request/MainComp";
 
-function Requsts() {
+function request() {
   return (
-    <div>Requsts</div>
+    <div>
+          <PageHeader title="Requst List" />
+          <Request/>
+    </div>
   )
 }
 
-export default Requsts
+export default request

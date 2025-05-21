@@ -26,7 +26,7 @@ const Login = ({ setIsAuthenticated }) => {
     const data = { email, password };
 
     try {
-      const response = await fetch("http://localhost:3001/web/employee/login-employee", {
+      const response = await fetch("http://localhost:3001/dashboard/systemuser/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -34,40 +34,23 @@ const Login = ({ setIsAuthenticated }) => {
 
       const result = await response.json();
 
-      if (response.ok) {
-        const { accessToken, refreshToken } = result.data;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-        await getLoginUserData(accessToken);
+      if (response.ok && result.success) {
+        const { token, user } = result.data;
+
+        console.log("✅ token:", token);
+        console.log("✅ user Data:", user);
+
+        localStorage.setItem("accessToken", token);
+        localStorage.setItem("userData", JSON.stringify(user));
+
+        setIsAuthenticated(true);
+        navigate('/dashboard');
       } else {
         setAlertMessage(result.message || "Login failed");
       }
     } catch (error) {
+      console.error("Login error:", error);
       setAlertMessage("Login failed");
-    }
-  };
-
-  const getLoginUserData = async (accessToken) => {
-    try {
-      const response = await fetch("http://localhost:3001/web/employee/get-logged-in-employee-details", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem("userData", JSON.stringify(result.data));
-        setIsAuthenticated(true);
-        navigate('/dashboard');
-      } else {
-        setAlertMessage(result.message || "Failed to get user details");
-      }
-    } catch (error) {
-      setAlertMessage("Failed to get user details");
     }
   };
 

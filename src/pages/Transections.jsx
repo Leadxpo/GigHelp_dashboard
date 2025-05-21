@@ -1,9 +1,14 @@
 import React from 'react'
+import PageHeader from "../layout/PageHeader";
+import Transections from "../components/Transections/MainComp";
 
-function Transections() {
+function transections() {
   return (
-    <div>Transections</div>
+    <div>
+          <PageHeader title="Transections List" />
+          <Transections/>
+    </div>
   )
 }
 
-export default Transections
+export default transections

@@ -1,14 +1,14 @@
 import React from 'react'
 import PageHeader from "../layout/PageHeader";
-import BrandList from "../components/Users/BrandList";
+import UserList from "../components/Users/UsersList";
 
-function brands() {
+function users() {
   return (
     <div>
           <PageHeader title="Users List" />
-          <BrandList/>
+          <UserList/>
     </div>
   )
 }
 
-export default brands
+export default users;

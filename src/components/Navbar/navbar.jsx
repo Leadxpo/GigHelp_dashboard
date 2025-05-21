@@ -9,7 +9,7 @@ import {
   MenuItem,
   Divider,
   Chip,
-  Box
+  Box,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -21,9 +21,12 @@ const Navbar = ({ toggleSidebar, setIsAuthenticated }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userData"));
+    const user = JSON.parse(localStorage.getItem("user"));
     setUserData(user);
   }, []);
+
+console.log("lllllllll>",userData)
+
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -53,7 +56,7 @@ const Navbar = ({ toggleSidebar, setIsAuthenticated }) => {
     <AppBar
       position="static"
       sx={{
-        backgroundColor: "#ffff",
+        backgroundColor: "#fff",
         boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
         zIndex: 1000,
       }}
@@ -65,41 +68,41 @@ const Navbar = ({ toggleSidebar, setIsAuthenticated }) => {
         </IconButton>
         <img src={Logo} alt="Logo" style={{ width: "100px", height: "50px" }} />
 
-        {/* Right Side: Profile */}
+        {/* Right Side: Profile Dropdown */}
         <Box sx={{ marginLeft: "auto" }}>
-          {userData ? (
-            <>
-              <Chip
-                label={userData?.employee_name}
-                avatar={
-                  <Avatar
-                    src={userData?.image ? `http://localhost:3001/storage/userdp/${userData.image}` : ""}
-                    alt="Profile"
-                    sx={{ width: 40, height: 40 }}
-                  />
+          <Chip
+            label={userData?.userName || "Guest"}
+            avatar={
+              <Avatar
+                src={
+                  userData?.profilePic
+                    ? `http://localhost:3001/storage/userdp/${userData.profilePic}`
+                    : ""
                 }
-                onClick={handleMenuOpen}
-                variant="outlined"
-                sx={{ cursor: "pointer", backgroundColor: "white" }}
+                alt="Profile"
+                sx={{ width: 40, height: 40 }}
               />
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                transformOrigin={{ vertical: "top", horizontal: "right" }}
-              >
-                <Divider />
-                <MenuItem onClick={handleProfileNavigate}>Profile</MenuItem>
-                <MenuItem onClick={handleLogout}>
-                  <LogoutIcon fontSize="small" sx={{ mr: 1 }} />
-                  Logout
-                </MenuItem>
-              </Menu>
-            </>
-          ) : (
-            <Avatar sx={{ bgcolor: "gray" }} />
-          )}
+            }
+            onClick={handleMenuOpen}
+            variant="outlined"
+            sx={{ cursor: "pointer", backgroundColor: "white" }}
+          />
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+          >
+            <Divider />
+            {userData && (
+              <MenuItem onClick={handleProfileNavigate}>Profile</MenuItem>
+            )}
+            <MenuItem onClick={handleLogout}>
+              <LogoutIcon fontSize="small" sx={{ mr: 1 }} />
+              Logout
+            </MenuItem>
+          </Menu>
         </Box>
       </Toolbar>
     </AppBar>

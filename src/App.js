@@ -10,6 +10,12 @@ import User from "./pages/users";
 import Transections from "./pages/Transections";
 import TermsAndConditions from "./pages/Terms&Conditions";
 import Promotions from "./pages/Promotions";
+import SubCategory from "./pages/subCategories";
+import MainCategory from "./pages/categories";
+import UserMoreDetails from "./components/Users/MoreDetails";
+import TaskMoreDetails from "./components/Tasks/MoreDetails";
+import DisputesMoreDetails from "./components/Disputes/MoreDetails";
+import RequestMoreDetails from "./components/Request/MoreDetails";
 
 
 import Layout from "./pages/layout";
@@ -54,6 +60,24 @@ const App = () => {
             <Route path="/transections" element={<Transections />} />
             <Route path="/promotions" element={<Promotions />} />
             <Route path="/termsconditions" element={<TermsAndConditions />} />
+
+             {/* Category Routes */}
+    <Route path="/categories/categories" element={<MainCategory />} />
+    <Route path="/categories/subcategories" element={<SubCategory />} />
+
+
+   <Route path="/moreDetails" element={<UserMoreDetails />} />
+   <Route path="/taskMoreDetails" element={<TaskMoreDetails />} />
+   <Route path="/disputeMoreDetails" element={<DisputesMoreDetails />} />
+   <Route path="/requestMoreDetails" element={<RequestMoreDetails />} />
+
+
+
+
+
+
+
+
             {/* Redirects */}
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="*" element={<Navigate to="/home" />} />
@@ -63,42 +87,6 @@ const App = () => {
     </Router>
   );
 };
-// import logo from './logo.svg';
-// import './App.css';
 
-//   return (
-//     <Router>
-//       {!isAuthenticated ? (
-//         <Login setIsAuthenticated={setIsAuthenticated} />
-//       ) : (
-//         <Routes>
-//           <Route
-//             element={
-//               <Layout
-//                 onLogout={handleLogout}
-//                 toggleSidebar={toggleSidebar}
-//                 isSidebarCollapsed={isSidebarCollapsed}
-//                 setIsAuthenticated={setIsAuthenticated}
-//               />
-//             }
-//           >
-//             {/* Main Pages */}
-//             <Route path="/home" element={<Home />} />
-//             <Route path="/task" element={<Task />} />
-//             <Route path="/disputes" element={<Disputes />} />
-//             <Route path="/user" element={<User />} />
-//             <Route path="/requsts" element={<Requsts />} />
-//             <Route path="/profile" element={<Profile />} />
-//             <Route path="/transections" element={<Transections />} />
-//             <Route path="/promotions" element={<Promotions />} />
-//             <Route path="/termsconditions" element={<TermsAndConditions />} />
-//             {/* Redirects */}
-//             <Route path="/" element={<Navigate to="/home" />} />
-//             <Route path="*" element={<Navigate to="/home" />} />
-//           </Route>
-//         </Routes>
-//       )}
-//     </Router>
-//   );
 
 export default App;
