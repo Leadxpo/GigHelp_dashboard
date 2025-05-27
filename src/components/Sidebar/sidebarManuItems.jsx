@@ -15,6 +15,8 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 const menuItems = [
   { path: '/home', icon: <DashboardIcon />, text: 'Home' },
+  { path: '/systemuser', icon: <UserIcon />, text: 'System Users' },
+
   {
     text: 'Categories',
     icon: <CategoryIcon />,

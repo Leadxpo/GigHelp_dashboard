@@ -1,10 +1,14 @@
 import React from 'react'
+import PageHeader from "../layout/PageHeader";
+import TermsConditions from "../components/TermsConditions/TermsConditions";
 
-function TermsConditions() {
+function Terms() {
   return (
-    <div>Terms&Conditions</div>
+    <div>
+          <PageHeader title="Terms & Conditions" />
+          <TermsConditions/>
+    </div>
   )
 }
 
-export default TermsConditions
-
+export default Terms

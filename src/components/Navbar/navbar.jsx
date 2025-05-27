@@ -76,7 +76,7 @@ console.log("lllllllll>",userData)
               <Avatar
                 src={
                   userData?.profilePic
-                    ? `http://localhost:3001/storage/userdp/${userData.profilePic}`
+                    ? `http://localhost:3001/storege/userdp/${userData.profilePic}`
                     : ""
                 }
                 alt="Profile"

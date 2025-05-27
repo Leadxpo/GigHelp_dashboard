@@ -7,6 +7,7 @@ import Profile from "./pages/profile";
 import Disputes from "./pages/Disputes";
 import Requsts from "./pages/Requsts";
 import User from "./pages/users";
+import SystemUsers from "./pages/systemUsers";
 import Transections from "./pages/Transections";
 import TermsAndConditions from "./pages/Terms&Conditions";
 import Promotions from "./pages/Promotions";
@@ -55,6 +56,7 @@ const App = () => {
             <Route path="/task" element={<Task />} />
             <Route path="/disputes" element={<Disputes />} />
             <Route path="/user" element={<User />} />
+            <Route path="/systemuser" element={<SystemUsers />} />
             <Route path="/requsts" element={<Requsts />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/transections" element={<Transections />} />

@@ -77,6 +77,8 @@ useEffect(() => {
       return {
         ...task,
         userName: user?.userName || 'Unknown',
+        phoneNumber: user?.phoneNumber || 'Unknown',
+        email: user?.email || 'Unknown',
         profilePic: user?.profilePic || '',
         categoryName: task.Categories || 'N/A',
         subCategoryName: task.SubCategory || 'N/A',
@@ -219,14 +221,19 @@ const summaryCards = [
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem
-          onClick={() => {
-            navigate("/taskMoreDetails", { state: { userDetails: menuRow } });
-            handleMenuClose();
-          }}
-        >
-          More Details
-        </MenuItem>
+       <MenuItem
+  onClick={() => {
+    navigate("/taskMoreDetails", {
+      state: {
+        taskDetails: menuRow, // this includes both task and user info
+      },
+    });
+    handleMenuClose();
+  }}
+>
+  More Details
+</MenuItem>
+
         <MenuItem onClick={handleMenuClose}>Delete</MenuItem>
       </Menu>
     </Box>
