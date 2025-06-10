@@ -79,20 +79,20 @@ export const deleteSubcategory = async (SubCategoryId) => {
 };
 
 
-// Upload CSV
+
 export const uploadSubcategoryCSV = async (csvFile) => {
   try {
     const formData = new FormData();
     formData.append("csv_file", csvFile);
 
-    const response = await axios.post(`${API_URL}/bulk-upload-subcategory`, formData, { 
+    const response = await axios.post(`${API_URL}/upload-csv`, formData, { 
       headers: {
         'Authorization': `Bearer ${token}`
       }
     });
     return response.data;
   } catch (error) {
-    console.error("Error uploading subcategory CSV:", error);
+    console.error("Error uploading category CSV:", error);
     throw error;
   }
 };

@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Login from "./pages/login";
 import Home from "./pages/Home";
 import Task from "./pages/Task";
@@ -17,12 +22,14 @@ import UserMoreDetails from "./components/Users/MoreDetails";
 import TaskMoreDetails from "./components/Tasks/MoreDetails";
 import DisputesMoreDetails from "./components/Disputes/MoreDetails";
 import RequestMoreDetails from "./components/Request/MoreDetails";
-
+import Notifications from "./components/Notifications/mainNotification";
 
 import Layout from "./pages/layout";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => !!localStorage.getItem("accessToken"));
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => !!localStorage.getItem("accessToken")
+  );
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const handleLogout = () => {
@@ -62,23 +69,22 @@ const App = () => {
             <Route path="/transections" element={<Transections />} />
             <Route path="/promotions" element={<Promotions />} />
             <Route path="/termsconditions" element={<TermsAndConditions />} />
+            <Route path="/notification" element={<Notifications />} />
 
-             {/* Category Routes */}
-    <Route path="/categories/categories" element={<MainCategory />} />
-    <Route path="/categories/subcategories" element={<SubCategory />} />
+            {/* Category Routes */}
+            <Route path="/categories/categories" element={<MainCategory />} />
+            <Route path="/categories/subcategories" element={<SubCategory />} />
 
-
-   <Route path="/moreDetails" element={<UserMoreDetails />} />
-   <Route path="/taskMoreDetails" element={<TaskMoreDetails />} />
-   <Route path="/disputeMoreDetails" element={<DisputesMoreDetails />} />
-   <Route path="/requestMoreDetails" element={<RequestMoreDetails />} />
-
-
-
-
-
-
-
+            <Route path="/moreDetails" element={<UserMoreDetails />} />
+            <Route path="/taskMoreDetails" element={<TaskMoreDetails />} />
+            <Route
+              path="/disputeMoreDetails"
+              element={<DisputesMoreDetails />}
+            />
+            <Route
+              path="/requestMoreDetails"
+              element={<RequestMoreDetails />}
+            />
 
             {/* Redirects */}
             <Route path="/" element={<Navigate to="/home" />} />
@@ -89,6 +95,5 @@ const App = () => {
     </Router>
   );
 };
-
 
 export default App;

@@ -34,7 +34,7 @@ const columns = [
   { id: "subCategoryImage", label: "Image", minWidth: 100 },
   { id: "categoryName", label: "Category Name", minWidth: 100 },
   { id: "SubCategoryName", label: "Sub Category Name", minWidth: 200 },
-  { id: "description", label: "Description", minWidth: 200 },
+  { id: "description", label: "Description", minWidth: 100 },
   { id: "action", label: "Action", minWidth: 50 },
 ];
 
@@ -107,7 +107,6 @@ function SubCategories() {
     XLSX.writeFile(workbook, "SubCategory_List.xlsx");
   };
 
-  console.log("::::...", filteredSubCategories);
 
   return (
     <Box>

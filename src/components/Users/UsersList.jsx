@@ -202,16 +202,18 @@ const Dashboard = () => {
               )
               .map((row, index) => {
                 const userTasks = tasks.filter(
-                  (task) => task.userId === row.userId
+                  (task) => String(task.userId) === String(row.userId)
                 );
                 const totalTasks = userTasks.length;
 
                 const completedTasks = userTasks.filter(
-                  (task) => task.status === "Completed"
+                  (task) => task.status?.toLowerCase() === "completed"
                 ).length;
-                const disputeCount = bids.filter(
-                  (bid) => bid.userId === row.userId && bid.status === "Dispute"
+
+                const disputeCount = userTasks.filter(
+                 (task) => task.status?.toLowerCase() === "dispute"
                 ).length;
+
 
                 return (
                   <TableRow key={row.userId || index}>

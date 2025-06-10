@@ -75,7 +75,7 @@ export const uploadCategoryCSV = async (csvFile) => {
     const formData = new FormData();
     formData.append("csv_file", csvFile);
 
-    const response = await axios.post(`${API_URL}/bulk-upload-category`, formData, { 
+    const response = await axios.post(`${API_URL}/upload-csv`, formData, { 
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -86,3 +86,5 @@ export const uploadCategoryCSV = async (csvFile) => {
     throw error;
   }
 };
+
+

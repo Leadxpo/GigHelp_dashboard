@@ -10,23 +10,50 @@ import {
   Divider,
   Chip,
   Box,
+  Badge,
 } from "@mui/material";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Logo from "../../Images/logo.jpg";
+import axios from "axios";
 
 const Navbar = ({ toggleSidebar, setIsAuthenticated }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [userData, setUserData] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("userData"));
     setUserData(user);
+
+    if (user?.userId) {
+      const fetchUnreadCount = async () => {
+        try {
+          const token = localStorage.getItem("token");
+          const response = await axios.get(
+            `http://localhost:3001/notification/user/${user.userId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          const allNotifications = response.data?.data || [];
+          const unread = allNotifications.filter((n) => !n.isRead).length;
+
+          setUnreadCount(unread);
+        } catch (error) {
+          console.error("Failed to fetch notification count:", error);
+        }
+      };
+
+      fetchUnreadCount();
+    }
   }, []);
-
-console.log("lllllllll>",userData)
-
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -52,6 +79,10 @@ console.log("lllllllll>",userData)
     handleMenuClose();
   };
 
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+
   return (
     <AppBar
       position="static"
@@ -64,12 +95,25 @@ console.log("lllllllll>",userData)
       <Toolbar>
         {/* Left Side: Menu Icon and Logo */}
         <IconButton edge="start" onClick={toggleSidebar} sx={{ mr: 2 }}>
-          <MenuIcon sx={{ fontSize: "28px" }} />
+          <MenuIcon sx={{ fontSize: "28px", color: "black" }} />
         </IconButton>
-        <img src={Logo} alt="Logo" style={{ width: "100px", height: "50px" }} />
+        <img
+          src={Logo}
+          alt="Logo"
+          style={{ width: "100px", height: "50px", marginRight: "20px" }}
+        />
 
-        {/* Right Side: Profile Dropdown */}
-        <Box sx={{ marginLeft: "auto" }}>
+        {/* Right Side: Notification & Profile */}
+        <Box sx={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 2 }}>
+          <IconButton
+            onClick={() => handleNavigation("/notification")}
+            sx={{ color: "black" }}
+          >
+            <Badge badgeContent={unreadCount || 0} color="error">
+              <NotificationsIcon sx={{ fontSize: "2rem" }} />
+            </Badge>
+          </IconButton>
+
           <Chip
             label={userData?.userName || "Guest"}
             avatar={
@@ -87,6 +131,7 @@ console.log("lllllllll>",userData)
             variant="outlined"
             sx={{ cursor: "pointer", backgroundColor: "white" }}
           />
+
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}

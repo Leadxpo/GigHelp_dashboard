@@ -22,8 +22,11 @@ const token = localStorage.getItem("accessToken");
 
 const UserDetails = () => {
   const location = useLocation();
+    const [tasks, setTasks] = useState([]);
+    const [bids, setBids] = useState([]);
   const { userDetails } = location?.state || {};
   const userId = userDetails?.userId;
+
 
   const [statuses, setStatuses] = useState(
     Array.isArray(userDetails?.identityProof)
@@ -61,6 +64,12 @@ const UserDetails = () => {
     setDescriptions(newDescriptions);
   };
 
+
+
+
+
+
+
   const handleSubmit = async () => {
   try {
     const response = await axios.put(
@@ -80,6 +89,60 @@ const UserDetails = () => {
     alert("Failed to update user details.");
   }
 };
+
+
+ const getTaskData = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/task/get-all`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setTasks(res.data.data);
+    } catch (err) {
+      console.error("Task fetch error:", err);
+    }
+  };
+
+  const getBidData = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/Bids/get-all-bids`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setBids(res.data.data || []);
+    } catch (err) {
+      console.error("Bid fetch error:", err);
+    }
+  };
+
+  useEffect(() => {
+    getTaskData();
+    getBidData();
+  }, []);
+
+
+ const userTasks = tasks.filter(
+                  (task) => String(task.userId) === String(userId)
+                );
+                const totalTasks = userTasks.length;
+
+                const completedTasks = userTasks.filter(
+                  (task) => task.status?.toLowerCase() === "completed"
+                ).length;
+
+
+
+                 const disputeCount = userTasks.filter(
+                  (task) => task.status?.toLowerCase() === "dispute"
+                ).length;
+
+               
+ const bidsCount = bids.filter(
+  (bid) => String(bid.userId) === String(userId)
+).length;
+
+
+
+
+
 
   return (
     <Box p={0}>
@@ -108,10 +171,10 @@ const UserDetails = () => {
                 ["Name", userDetails.userName],
                 ["Phone number", userDetails.phoneNumber],
                 ["Email", userDetails.email],
-                ["Number of Task", "675"],
-                ["Number of Beddings", "657"],
-                ["Number of Works", "786"],
-                ["Number of Disputes", "65"],
+                ["Number of Task", totalTasks],
+                ["Number of Beddings", bidsCount],
+                ["Number of Works", completedTasks],
+                ["Number of Disputes", disputeCount],
               ].map(([label, value], index) => (
                 <Grid item xs={12} sm={6} key={index}>
                   <Box sx={{ backgroundColor: "#f0f0f0", borderRadius: 2, p: 2 }}>

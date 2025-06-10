@@ -38,6 +38,12 @@ const Dashboard = () => {
   const [bidderName, setBidderName] = useState('');
   const [amount, setAmount] = useState('');
   const [selectedRow, setSelectedRow] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+
+if (selectedRow) {
+  console.log("selectedRow", selectedRow);
+}
 
   const navigate = useNavigate();
 
@@ -76,7 +82,6 @@ const Dashboard = () => {
   };
 
 
-console.log("''''''''''''''>>",request)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -139,12 +144,6 @@ console.log("''''''''''''''>>",request)
   };
 
 
- const openModal = () => setIsOpen(true);
-  const closeModal = () => {
-    setIsOpen(false);
-    setBidderName('');
-    setAmount('');
-  };
 
 const handleSend = async () => {
   try {
@@ -155,6 +154,9 @@ const handleSend = async () => {
       userId: selectedRow?.taskOwnerId,
       taskUser: selectedRow?.bidDetails?.userId,
       categoryName: selectedRow?.bidDetails?.Categories,
+      typeOfPayment: "Online", // or any valid string
+      dateOfPayment: new Date().toISOString(), // optional, use current date
+      status: "pending", // ✅ REQUIRED by your model
     });
 
     console.log("Transfer Payment Response:", response);
@@ -170,6 +172,26 @@ const handleSend = async () => {
 
 
 
+const filteredRequests = request.filter((req) =>
+  req.requestName?.toLowerCase().includes(searchQuery.toLowerCase())
+);
+
+
+
+// Define globally (not inside onClick)
+const openModal = (row) => {
+  setSelectedRow(row);  // store selected row
+  setBidderName(row?.bidDetails?.userName || '');
+  setAmount(row?.bidDetails?.bidOfAmount || '');
+  setIsOpen(true);
+};
+
+const closeModal = () => {
+  setIsOpen(false);
+  setBidderName('');
+  setAmount('');
+  setSelectedRow(null); // Also reset selectedRow to avoid stale data
+};
 
   return (
     <Box sx={{ p: 0, mt: 2 }}>
@@ -201,23 +223,26 @@ const handleSend = async () => {
         ))}
       </Grid>
 
-      {/* Search Bar */}
-      <Box mt={3} mb={2}>
-        <TextField
-          fullWidth
-          placeholder="Search"
-          variant="outlined"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton>
-                  <SearchIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box>
+
+
+     <Box mt={3} mb={2}>
+  <TextField
+    fullWidth
+    placeholder="Search by Request Name"
+    variant="outlined"
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+    InputProps={{
+      endAdornment: (
+        <InputAdornment position="end">
+          <IconButton>
+            <SearchIcon />
+          </IconButton>
+        </InputAdornment>
+      ),
+    }}
+  />
+</Box>
 
 
       {/* Table */}
@@ -244,7 +269,7 @@ const handleSend = async () => {
                     key={index}
                     sx={{
                       color: "#fff",
-                      fontSize: "1.1rem",
+                      fontSize: "16px",
                       fontWeight: "bold",
                     }}
                   >
@@ -253,46 +278,38 @@ const handleSend = async () => {
                 ))}
               </TableRow>
             </TableHead>
-            <TableBody>
-              {request.map((row, idx) => (
-                <TableRow key={row.id}>
-                  <TableCell>{`0${idx + 1}`}</TableCell>
-                  <TableCell>{row.requestName}</TableCell>
-                  <TableCell>
-                    {new Date(row.createdAt).toLocaleDateString()}
-                  </TableCell>{" "}
-                  <TableCell>{row.description}</TableCell>
-                  <TableCell>{row.amount}</TableCell>
-                  <TableCell>{row.taskId}</TableCell>
-                  <TableCell>{row.BidId}</TableCell>
-                  <TableCell>
-                    <IconButton onClick={(e) => handleMenuOpen(e, row)}>
-                      <MoreVertIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+           <TableBody>
+  {filteredRequests.map((row, idx) => (
+    <TableRow key={row.id}>
+      <TableCell>{`0${idx + 1}`}</TableCell>
+      <TableCell>{row.requestName}</TableCell>
+      <TableCell>{new Date(row.createdAt).toLocaleDateString()}</TableCell>
+      <TableCell>{row.description}</TableCell>
+      <TableCell>{row.amount}</TableCell>
+      <TableCell>{row.taskId}</TableCell>
+      <TableCell>{row.BidId}</TableCell>
+      <TableCell>
+        <IconButton onClick={(e) => handleMenuOpen(e, row)}>
+          <MoreVertIcon />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  ))}
+</TableBody>
+
           </Table>
         </TableContainer>
       )}
 
-     <Menu
+<Menu
   anchorEl={anchorEl}
   open={Boolean(anchorEl)}
   onClose={handleMenuClose}
 >
   <MenuItem
     onClick={() => {
-      const openModal = (row) => {
-  setSelectedRow(row);  // store selected row
-  setBidderName(row?.bidDetails?.userName || '');
-  setAmount(row?.bidDetails?.bidOfAmount || '');
-  setIsOpen(true);
-};
-
-      openModal(); // ✅ Call the function
-      handleMenuClose(); // ✅ Then close the menu
+      openModal(menuRow); // Pass correct row here!
+      handleMenuClose();
     }}
   >
     Send Money to Bidder

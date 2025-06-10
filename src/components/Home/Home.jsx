@@ -5,6 +5,7 @@ import {
   Box,
   Grid,
   Paper,
+  CircularProgress,
 } from "@mui/material";
 import {
   LineChart,
@@ -27,25 +28,19 @@ const monthLabels = [
 
 const DashboardCards = () => {
   const [taskStats, setTaskStats] = useState(null);
-  const [inputValue, setInputValue] = useState("");
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchStatus = async () => {
     try {
       const response = await axios.get(API_URL, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       setTaskStats(response.data.data.stats);
     } catch (error) {
       console.error("Error fetching task stats:", error);
     }
   };
-
-  useEffect(() => {
-    fetchStatus();
-  }, []);
 
   const fetchTransactions = async () => {
     try {
@@ -54,25 +49,20 @@ const DashboardCards = () => {
       });
 
       const transactions = res.data.data || [];
-
-      // Grouping amounts by month
       const monthlyTotals = {};
 
       transactions.forEach((tx) => {
         const createdDate = new Date(tx.createdAt);
-        const monthIndex = createdDate.getMonth(); // 0 = Jan, 1 = Feb, ...
+        const monthIndex = createdDate.getMonth();
         const month = monthLabels[monthIndex];
 
         const amount = Number(tx.amount);
         if (!isNaN(amount)) {
-          if (!monthlyTotals[month]) {
-            monthlyTotals[month] = 0;
-          }
+          if (!monthlyTotals[month]) monthlyTotals[month] = 0;
           monthlyTotals[month] += amount;
         }
       });
 
-      // Prepare chart data
       const chartData = monthLabels.map((month) => ({
         month,
         price: monthlyTotals[month] || 0,
@@ -85,44 +75,41 @@ const DashboardCards = () => {
   };
 
   useEffect(() => {
-    fetchTransactions();
+    const fetchAll = async () => {
+      await Promise.all([fetchStatus(), fetchTransactions()]);
+      setLoading(false); // Mark loading complete
+    };
+    fetchAll();
   }, []);
 
-  const stats = taskStats
-    ? [
-        { title: "Task Users", value: taskStats.taskUsersCount, color: "#00BFA5" },
-        { title: "KYC Approved", value: taskStats.statusApproved, color: "#5C6BC0" },
-        { title: "Pending's", value: taskStats.statusPending, color: "#D4AC0D" },
-      ]
-    : [];
+  if (loading || !taskStats) {
+    return (
+      <Box sx={{ mt: 10, display: "flex", justifyContent: "center" }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
-  const additionalStats = taskStats
-    ? [
-        { title: "Tasks", value: taskStats.totalTasks, color: "#9C27B0" },
-        { title: "Disputes", value: taskStats.totalDisputes, color: "#03A9F4" },
-        { title: "Completed Tasks", value: taskStats.totalCompleted, color: "#4CAF50" },
-        { title: "Disputes Last 24 hrs", value: taskStats.last24hDisputes, color: "#A67C52" },
-      ]
-    : [];
+  const stats = [
+    { title: "Task Users", value: taskStats?.taskUsersCount ?? 0, color: "#00BFA5" },
+    { title: "KYC Approved", value: taskStats?.statusApproved ?? 0, color: "#5C6BC0" },
+    { title: "Pending's", value: taskStats?.statusPending ?? 0, color: "#D4AC0D" },
+  ];
+
+  const additionalStats = [
+    { title: "Tasks", value: taskStats?.totalTasks ?? 0, color: "#9C27B0" },
+    { title: "Disputes", value: taskStats?.totalDisputes ?? 0, color: "#03A9F4" },
+    { title: "Completed Tasks", value: taskStats?.totalCompleted ?? 0, color: "#4CAF50" },
+    { title: "Disputes Last 24 hrs", value: taskStats?.last24hDisputes ?? 0, color: "#A67C52" },
+  ];
 
   return (
     <Box sx={{ p: 0, mt: 5 }}>
-      {/* Stats Cards */}
       <Grid container spacing={3}>
         {stats.map((stat, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 200, damping: 10 }}>
-              <Paper
-                elevation={5}
-                sx={{
-                  backgroundColor: stat.color,
-                  color: "white",
-                  p: 3,
-                  textAlign: "center",
-                  borderRadius: 3,
-                  minHeight: 120,
-                }}
-              >
+              <Paper elevation={5} sx={{ backgroundColor: stat.color, color: "white", p: 3, textAlign: "center", borderRadius: 3, minHeight: 120 }}>
                 <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
                   {stat.title}
                 </Typography>
@@ -135,22 +122,11 @@ const DashboardCards = () => {
         ))}
       </Grid>
 
-      {/* Additional Stats */}
       <Grid container spacing={4} mt={4}>
         {additionalStats.map((stat, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 200, damping: 10 }}>
-              <Paper
-                elevation={4}
-                sx={{
-                  backgroundColor: stat.color,
-                  color: "white",
-                  p: 2,
-                  textAlign: "center",
-                  borderRadius: 3,
-                  minHeight: 100,
-                }}
-              >
+              <Paper elevation={4} sx={{ backgroundColor: stat.color, color: "white", p: 2, textAlign: "center", borderRadius: 3, minHeight: 100 }}>
                 <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
                   {stat.title}
                 </Typography>
@@ -163,7 +139,6 @@ const DashboardCards = () => {
         ))}
       </Grid>
 
-      {/* Line Chart */}
       <Box sx={{ mt: 6, height: 400 }}>
         <Typography variant="h5" mb={2}>
           Monthly Transaction Amount
@@ -177,9 +152,6 @@ const DashboardCards = () => {
           </LineChart>
         </ResponsiveContainer>
       </Box>
-
-
-      
     </Box>
   );
 };

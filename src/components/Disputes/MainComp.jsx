@@ -36,6 +36,8 @@ const Dashboard = () => {
   const [users, setUsers] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [combinedData, setCombinedData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
 
   const getUserData = async () => {
     try {
@@ -166,24 +168,24 @@ const Dashboard = () => {
           </Grid>
         ))}
       </Grid>
-
-      {/* Search Bar */}
-      <Box mt={3} mb={2}>
-        <TextField
-          fullWidth
-          placeholder="Search"
-          variant="outlined"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton>
-                  <SearchIcon />
-                </IconButton>
-              </InputAdornment>
-            )
-          }}
-        />
-      </Box>
+    <Box mt={3} mb={2}>
+      <TextField
+  fullWidth
+  placeholder="Search by Username"
+  variant="outlined"
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton>
+          <SearchIcon />
+        </IconButton>
+      </InputAdornment>
+    )
+  }}
+/>
+</Box>
 
       {/* Table */}
       <TableContainer component={Paper}>
@@ -193,7 +195,7 @@ const Dashboard = () => {
               {['No.', 'Client', 'Category', 'Sub Category', 'Date', 'KYC Status', 'Action'].map((head, index) => (
                 <TableCell
                   key={index}
-                  sx={{ color: '#fff', fontSize: '1.1rem', fontWeight: 'bold' }}
+                  sx={{ color: '#fff', fontSize: '16px', fontWeight: 'bold' }}
                 >
                   {head}
                 </TableCell>
@@ -202,9 +204,13 @@ const Dashboard = () => {
           </TableHead>
 
           <TableBody>
-            {combinedData
-              .filter(row => row.status?.toLowerCase() === 'dispute')
-              .map((row, idx) => (
+           {combinedData
+  .filter(row => 
+    row.status?.toLowerCase() === 'dispute' &&
+    row.userName?.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+  .map((row, idx) => (
+
                 <TableRow key={row.id}>
                   <TableCell>{`0${idx + 1}`}</TableCell>
                   <TableCell>
